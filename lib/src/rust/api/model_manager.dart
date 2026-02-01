@@ -10,13 +10,23 @@ part 'model_manager.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `get_model_dir`
 
+@freezed
+sealed class ModelDownloadEvent with _$ModelDownloadEvent {
+  const ModelDownloadEvent._();
+
+  const factory ModelDownloadEvent.progress(double field0) =
+      ModelDownloadEvent_Progress;
+  const factory ModelDownloadEvent.completed(String field0) =
+      ModelDownloadEvent_Completed;
+}
+
 class ModelManager {
   const ModelManager();
 
   static Future<ModelStatus> checkStatus() =>
       RustLib.instance.api.crateApiModelManagerModelManagerCheckStatus();
 
-  static Stream<double> downloadModel() =>
+  static Stream<ModelDownloadEvent> downloadModel() =>
       RustLib.instance.api.crateApiModelManagerModelManagerDownloadModel();
 
   @override

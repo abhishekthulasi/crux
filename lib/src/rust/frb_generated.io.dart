@@ -23,7 +23,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AnyhowException dco_decode_AnyhowException(dynamic raw);
 
   @protected
-  RustStreamSink<double> dco_decode_StreamSink_f_32_Sse(dynamic raw);
+  RustStreamSink<ModelDownloadEvent>
+  dco_decode_StreamSink_model_download_event_Sse(dynamic raw);
 
   @protected
   String dco_decode_String(dynamic raw);
@@ -33,6 +34,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
+
+  @protected
+  ModelDownloadEvent dco_decode_model_download_event(dynamic raw);
 
   @protected
   ModelManager dco_decode_model_manager(dynamic raw);
@@ -50,9 +54,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AnyhowException sse_decode_AnyhowException(SseDeserializer deserializer);
 
   @protected
-  RustStreamSink<double> sse_decode_StreamSink_f_32_Sse(
-    SseDeserializer deserializer,
-  );
+  RustStreamSink<ModelDownloadEvent>
+  sse_decode_StreamSink_model_download_event_Sse(SseDeserializer deserializer);
 
   @protected
   String sse_decode_String(SseDeserializer deserializer);
@@ -62,6 +65,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
+
+  @protected
+  ModelDownloadEvent sse_decode_model_download_event(
+    SseDeserializer deserializer,
+  );
 
   @protected
   ModelManager sse_decode_model_manager(SseDeserializer deserializer);
@@ -88,8 +96,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  void sse_encode_StreamSink_f_32_Sse(
-    RustStreamSink<double> self,
+  void sse_encode_StreamSink_model_download_event_Sse(
+    RustStreamSink<ModelDownloadEvent> self,
     SseSerializer serializer,
   );
 
@@ -102,6 +110,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_prim_u_8_strict(
     Uint8List self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_model_download_event(
+    ModelDownloadEvent self,
     SseSerializer serializer,
   );
 

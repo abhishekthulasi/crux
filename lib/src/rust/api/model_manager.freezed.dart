@@ -12,6 +12,298 @@ part of 'model_manager.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
+mixin _$ModelDownloadEvent {
+
+ Object get field0;
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ModelDownloadEvent&&const DeepCollectionEquality().equals(other.field0, field0));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(field0));
+
+@override
+String toString() {
+  return 'ModelDownloadEvent(field0: $field0)';
+}
+
+
+}
+
+/// @nodoc
+class $ModelDownloadEventCopyWith<$Res>  {
+$ModelDownloadEventCopyWith(ModelDownloadEvent _, $Res Function(ModelDownloadEvent) __);
+}
+
+
+/// Adds pattern-matching-related methods to [ModelDownloadEvent].
+extension ModelDownloadEventPatterns on ModelDownloadEvent {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ModelDownloadEvent_Progress value)?  progress,TResult Function( ModelDownloadEvent_Completed value)?  completed,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case ModelDownloadEvent_Progress() when progress != null:
+return progress(_that);case ModelDownloadEvent_Completed() when completed != null:
+return completed(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ModelDownloadEvent_Progress value)  progress,required TResult Function( ModelDownloadEvent_Completed value)  completed,}){
+final _that = this;
+switch (_that) {
+case ModelDownloadEvent_Progress():
+return progress(_that);case ModelDownloadEvent_Completed():
+return completed(_that);}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ModelDownloadEvent_Progress value)?  progress,TResult? Function( ModelDownloadEvent_Completed value)?  completed,}){
+final _that = this;
+switch (_that) {
+case ModelDownloadEvent_Progress() when progress != null:
+return progress(_that);case ModelDownloadEvent_Completed() when completed != null:
+return completed(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( double field0)?  progress,TResult Function( String field0)?  completed,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case ModelDownloadEvent_Progress() when progress != null:
+return progress(_that.field0);case ModelDownloadEvent_Completed() when completed != null:
+return completed(_that.field0);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( double field0)  progress,required TResult Function( String field0)  completed,}) {final _that = this;
+switch (_that) {
+case ModelDownloadEvent_Progress():
+return progress(_that.field0);case ModelDownloadEvent_Completed():
+return completed(_that.field0);}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( double field0)?  progress,TResult? Function( String field0)?  completed,}) {final _that = this;
+switch (_that) {
+case ModelDownloadEvent_Progress() when progress != null:
+return progress(_that.field0);case ModelDownloadEvent_Completed() when completed != null:
+return completed(_that.field0);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class ModelDownloadEvent_Progress extends ModelDownloadEvent {
+  const ModelDownloadEvent_Progress(this.field0): super._();
+  
+
+@override final  double field0;
+
+/// Create a copy of ModelDownloadEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ModelDownloadEvent_ProgressCopyWith<ModelDownloadEvent_Progress> get copyWith => _$ModelDownloadEvent_ProgressCopyWithImpl<ModelDownloadEvent_Progress>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ModelDownloadEvent_Progress&&(identical(other.field0, field0) || other.field0 == field0));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,field0);
+
+@override
+String toString() {
+  return 'ModelDownloadEvent.progress(field0: $field0)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ModelDownloadEvent_ProgressCopyWith<$Res> implements $ModelDownloadEventCopyWith<$Res> {
+  factory $ModelDownloadEvent_ProgressCopyWith(ModelDownloadEvent_Progress value, $Res Function(ModelDownloadEvent_Progress) _then) = _$ModelDownloadEvent_ProgressCopyWithImpl;
+@useResult
+$Res call({
+ double field0
+});
+
+
+
+
+}
+/// @nodoc
+class _$ModelDownloadEvent_ProgressCopyWithImpl<$Res>
+    implements $ModelDownloadEvent_ProgressCopyWith<$Res> {
+  _$ModelDownloadEvent_ProgressCopyWithImpl(this._self, this._then);
+
+  final ModelDownloadEvent_Progress _self;
+  final $Res Function(ModelDownloadEvent_Progress) _then;
+
+/// Create a copy of ModelDownloadEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? field0 = null,}) {
+  return _then(ModelDownloadEvent_Progress(
+null == field0 ? _self.field0 : field0 // ignore: cast_nullable_to_non_nullable
+as double,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class ModelDownloadEvent_Completed extends ModelDownloadEvent {
+  const ModelDownloadEvent_Completed(this.field0): super._();
+  
+
+@override final  String field0;
+
+/// Create a copy of ModelDownloadEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ModelDownloadEvent_CompletedCopyWith<ModelDownloadEvent_Completed> get copyWith => _$ModelDownloadEvent_CompletedCopyWithImpl<ModelDownloadEvent_Completed>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ModelDownloadEvent_Completed&&(identical(other.field0, field0) || other.field0 == field0));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,field0);
+
+@override
+String toString() {
+  return 'ModelDownloadEvent.completed(field0: $field0)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ModelDownloadEvent_CompletedCopyWith<$Res> implements $ModelDownloadEventCopyWith<$Res> {
+  factory $ModelDownloadEvent_CompletedCopyWith(ModelDownloadEvent_Completed value, $Res Function(ModelDownloadEvent_Completed) _then) = _$ModelDownloadEvent_CompletedCopyWithImpl;
+@useResult
+$Res call({
+ String field0
+});
+
+
+
+
+}
+/// @nodoc
+class _$ModelDownloadEvent_CompletedCopyWithImpl<$Res>
+    implements $ModelDownloadEvent_CompletedCopyWith<$Res> {
+  _$ModelDownloadEvent_CompletedCopyWithImpl(this._self, this._then);
+
+  final ModelDownloadEvent_Completed _self;
+  final $Res Function(ModelDownloadEvent_Completed) _then;
+
+/// Create a copy of ModelDownloadEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? field0 = null,}) {
+  return _then(ModelDownloadEvent_Completed(
+null == field0 ? _self.field0 : field0 // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
 mixin _$ModelStatus {
 
 

@@ -84,7 +84,7 @@ abstract class RustLibApi extends BaseApi {
 
   Future<ModelStatus> crateApiModelManagerModelManagerCheckStatus();
 
-  Stream<double> crateApiModelManagerModelManagerDownloadModel();
+  Stream<ModelDownloadEvent> crateApiModelManagerModelManagerDownloadModel();
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -176,14 +176,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Stream<double> crateApiModelManagerModelManagerDownloadModel() {
-    final sink = RustStreamSink<double>();
+  Stream<ModelDownloadEvent> crateApiModelManagerModelManagerDownloadModel() {
+    final sink = RustStreamSink<ModelDownloadEvent>();
     unawaited(
       handler.executeNormal(
         NormalTask(
           callFfi: (port_) {
             final serializer = SseSerializer(generalizedFrbRustBinding);
-            sse_encode_StreamSink_f_32_Sse(sink, serializer);
+            sse_encode_StreamSink_model_download_event_Sse(sink, serializer);
             pdeCallFfi(
               generalizedFrbRustBinding,
               serializer,
@@ -192,7 +192,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             );
           },
           codec: SseCodec(
-            decodeSuccessData: sse_decode_String,
+            decodeSuccessData: sse_decode_unit,
             decodeErrorData: sse_decode_AnyhowException,
           ),
           constMeta: kCrateApiModelManagerModelManagerDownloadModelConstMeta,
@@ -217,7 +217,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  RustStreamSink<double> dco_decode_StreamSink_f_32_Sse(dynamic raw) {
+  RustStreamSink<ModelDownloadEvent>
+  dco_decode_StreamSink_model_download_event_Sse(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     throw UnimplementedError();
   }
@@ -238,6 +239,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as Uint8List;
+  }
+
+  @protected
+  ModelDownloadEvent dco_decode_model_download_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return ModelDownloadEvent_Progress(dco_decode_f_32(raw[1]));
+      case 1:
+        return ModelDownloadEvent_Completed(dco_decode_String(raw[1]));
+      default:
+        throw Exception("unreachable");
+    }
   }
 
   @protected
@@ -282,9 +296,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  RustStreamSink<double> sse_decode_StreamSink_f_32_Sse(
-    SseDeserializer deserializer,
-  ) {
+  RustStreamSink<ModelDownloadEvent>
+  sse_decode_StreamSink_model_download_event_Sse(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     throw UnimplementedError('Unreachable ()');
   }
@@ -307,6 +320,25 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var len_ = sse_decode_i_32(deserializer);
     return deserializer.buffer.getUint8List(len_);
+  }
+
+  @protected
+  ModelDownloadEvent sse_decode_model_download_event(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        var var_field0 = sse_decode_f_32(deserializer);
+        return ModelDownloadEvent_Progress(var_field0);
+      case 1:
+        var var_field0 = sse_decode_String(deserializer);
+        return ModelDownloadEvent_Completed(var_field0);
+      default:
+        throw UnimplementedError('');
+    }
   }
 
   @protected
@@ -364,15 +396,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_StreamSink_f_32_Sse(
-    RustStreamSink<double> self,
+  void sse_encode_StreamSink_model_download_event_Sse(
+    RustStreamSink<ModelDownloadEvent> self,
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(
       self.setupAndSerialize(
         codec: SseCodec(
-          decodeSuccessData: sse_decode_f_32,
+          decodeSuccessData: sse_decode_model_download_event,
           decodeErrorData: sse_decode_AnyhowException,
         ),
       ),
@@ -400,6 +432,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.length, serializer);
     serializer.buffer.putUint8List(self);
+  }
+
+  @protected
+  void sse_encode_model_download_event(
+    ModelDownloadEvent self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case ModelDownloadEvent_Progress(field0: final field0):
+        sse_encode_i_32(0, serializer);
+        sse_encode_f_32(field0, serializer);
+      case ModelDownloadEvent_Completed(field0: final field0):
+        sse_encode_i_32(1, serializer);
+        sse_encode_String(field0, serializer);
+    }
   }
 
   @protected

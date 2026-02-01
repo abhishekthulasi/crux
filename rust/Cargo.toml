@@ -7,7 +7,12 @@ edition = "2021"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
+hf-hub = { version = "0.4.3", features = ["tokio"] }
+tokio = { version = "1.49.0", features = ["full"] }
+reqwest = { version = "0.13.1", features = ["stream"] }
+anyhow = "1.0.100"
+directories = "6.0.0"
 flutter_rust_bridge = "=2.11.1"
-
+futures-util = "0.3.31"
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }

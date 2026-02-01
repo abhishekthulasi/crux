@@ -3,9 +3,9 @@ use anyhow::{anyhow, Context, Result};
 use directories::ProjectDirs;
 use futures_util::StreamExt;
 use reqwest::header::RANGE;
-use std::fs::{self};
-use std::io::{Seek, SeekFrom, Write};
 use std::path::PathBuf;
+use tokio::fs::{self, OpenOptions};
+use tokio::io::AsyncWriteExt;
 
 const MODEL_REPO: &str = "google/gemma-3-4b-it-qat-q4_0-gguf";
 const MODEL_FILENAME: &str = "gemma-3-4b-it-qat-q4_0.gguf";
@@ -24,22 +24,24 @@ pub struct ModelManager {}
 
 impl ModelManager {
     /// Resolves the app data directory (e.g., AppData/Roaming/Crux on Windows)
-    fn get_model_dir() -> Result<PathBuf> {
+    async fn get_model_dir() -> Result<PathBuf> {
         let proj_dirs = ProjectDirs::from("com", "crux", "crux_app")
             .ok_or_else(|| anyhow!("Could not determine home directory"))?;
 
         let data_dir = proj_dirs.data_dir();
-        if !data_dir.exists() {
-            fs::create_dir_all(data_dir).context("Failed to create app data directory")?;
+        if !fs::try_exists(data_dir).await.unwrap_or(false) {
+            fs::create_dir_all(data_dir)
+                .await
+                .context("Failed to create app data directory")?;
         }
         Ok(data_dir.to_path_buf())
     }
 
-    pub fn check_status() -> Result<ModelStatus> {
-        let dir = Self::get_model_dir()?;
+    pub async fn check_status() -> Result<ModelStatus> {
+        let dir = Self::get_model_dir().await?;
         let file_path = dir.join(MODEL_FILENAME);
 
-        if file_path.exists() {
+        if fs::try_exists(&file_path).await.unwrap_or(false) {
             // Optional: Check file size or hash here for integrity
             Ok(ModelStatus::Present(
                 file_path.to_string_lossy().into_owned(),
@@ -50,12 +52,12 @@ impl ModelManager {
     }
 
     pub async fn download_model(sink: StreamSink<ModelDownloadEvent>) -> Result<()> {
-        let dir = Self::get_model_dir()?;
+        let dir = Self::get_model_dir().await?;
         let final_path = dir.join(MODEL_FILENAME);
         let part_path = dir.join(format!("{}.part", MODEL_FILENAME)); // 1. Use a temporary extension
 
         // 2. If final file exists, return immediately (or verify hash)
-        if final_path.exists() {
+        if fs::try_exists(&final_path).await.unwrap_or(false) {
             sink.add(ModelDownloadEvent::Completed(
                 final_path.to_string_lossy().into_owned(),
             ))
@@ -64,8 +66,8 @@ impl ModelManager {
         }
 
         let mut downloaded: u64 = 0;
-        if part_path.exists() {
-            downloaded = fs::metadata(&part_path)?.len();
+        if fs::try_exists(&part_path).await.unwrap_or(false) {
+            downloaded = fs::metadata(&part_path).await?.len();
         }
 
         let url = format!(
@@ -104,24 +106,29 @@ impl ModelManager {
         } else {
             response.content_length().unwrap_or(0)
         };
-        let mut file = std::fs::OpenOptions::new()
-            .create(true)
-            .write(true)
-            .append(file_mode_append) // Append only if resuming
-            .open(&part_path)
-            .context("Failed to open model file")?;
 
-        // If we got a 200 OK but had a partial file, truncate it now
-        if !file_mode_append {
-            file.set_len(0)?;
-            file.seek(SeekFrom::Start(0))?;
+        let mut options = OpenOptions::new();
+        options.create(true).write(true);
+
+        if file_mode_append {
+            options.append(true);
+        } else {
+            // If we are starting over, this flag automatically wipes the file
+            options.truncate(true);
         }
+
+        let mut file = options
+            .open(&part_path)
+            .await
+            .context("Failed to open model file")?;
 
         let mut stream = response.bytes_stream();
 
         while let Some(item) = stream.next().await {
             let chunk = item.context("Error while downloading chunk")?;
-            file.write_all(&chunk).context("Error writing to file")?;
+            file.write_all(&chunk)
+                .await
+                .context("Error writing to file")?;
 
             downloaded += chunk.len() as u64;
 
@@ -131,8 +138,12 @@ impl ModelManager {
             }
         }
 
+        file.flush().await?;
+
         // 6. Rename and Finish
-        fs::rename(&part_path, &final_path).context("Failed to rename completed file")?;
+        fs::rename(&part_path, &final_path)
+            .await
+            .context("Failed to rename completed file")?;
 
         sink.add(ModelDownloadEvent::Completed(
             final_path.to_string_lossy().into_owned(),

@@ -9,10 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_riverpod: ^3.0.3
   flutter_rust_bridge: 2.11.1
-  freezed_annotation: ^3.1.0
+  riverpod_annotation: ^3.0.3
   rust_lib_crux:
     path: rust_builder
+  freezed_annotation: ^3.1.0
 
 dev_dependencies:
   flutter_test:
@@ -20,8 +22,9 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   integration_test:
     sdk: flutter
-  freezed: ^3.2.4
   build_runner: ^2.10.5
+  riverpod_generator: ^3.0.3
+  freezed: ^3.2.3
 
 flutter:
   uses-material-design: true

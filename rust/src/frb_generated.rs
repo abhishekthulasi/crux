@@ -115,7 +115,7 @@ fn wire__crate__api__model_manager__model_manager_check_status_impl(
     rust_vec_len_: i32,
     data_len_: i32,
 ) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
             debug_name: "model_manager_check_status",
             port: Some(port_),
@@ -132,12 +132,14 @@ fn wire__crate__api__model_manager__model_manager_check_status_impl(
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             deserializer.end();
-            move |context| {
+            move |context| async move {
                 transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
-                    (move || {
-                        let output_ok = crate::api::model_manager::ModelManager::check_status()?;
+                    (move || async move {
+                        let output_ok =
+                            crate::api::model_manager::ModelManager::check_status().await?;
                         Ok(output_ok)
-                    })(),
+                    })()
+                    .await,
                 )
             }
         },

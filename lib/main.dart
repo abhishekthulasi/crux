@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:crux/src/rust/api/simple.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:crux/src/rust/frb_generated.dart';
+import 'package:crux/screens/bootstrap_screen.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await RustLib.init();
-  runApp(const MainApp());
+  runApp(const ProviderScope(child: MainApp()));
 }
 
 class MainApp extends StatelessWidget {
@@ -13,10 +15,10 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Crux',
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(child: Text(greet(name: 'Abhishek'))),
-      ),
+      theme: ThemeData(useMaterial3: true),
+      home: const BootstrapScreen(),
     );
   }
 }

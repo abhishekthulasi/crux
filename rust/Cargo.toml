@@ -8,7 +8,7 @@ crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
 hf-hub = { version = "0.4.3", features = ["tokio"] }
-tokio = { version = "1.49.0", features = ["full"] }
+tokio = { version = "1.49.0", features = ["full", "fs"] }
 reqwest = { version = "0.13.1", features = ["stream"] }
 anyhow = "1.0.100"
 directories = "6.0.0"

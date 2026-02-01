@@ -4,7 +4,7 @@ use directories::ProjectDirs;
 use futures_util::StreamExt;
 use reqwest::header::RANGE;
 use std::fs::{self};
-use std::io::Write;
+use std::io::{Seek, SeekFrom, Write};
 use std::path::PathBuf;
 
 const MODEL_REPO: &str = "google/gemma-3-4b-it-qat-q4_0-gguf";
@@ -104,13 +104,18 @@ impl ModelManager {
         } else {
             response.content_length().unwrap_or(0)
         };
-        // 5. Open file in Append mode if resuming, Create if new
         let mut file = std::fs::OpenOptions::new()
             .create(true)
             .write(true)
-            .append(true) // Crucial for resuming
+            .append(file_mode_append) // Append only if resuming
             .open(&part_path)
             .context("Failed to open model file")?;
+
+        // If we got a 200 OK but had a partial file, truncate it now
+        if !file_mode_append {
+            file.set_len(0)?;
+            file.seek(SeekFrom::Start(0))?;
+        }
 
         let mut stream = response.bytes_stream();
 
@@ -120,15 +125,14 @@ impl ModelManager {
 
             downloaded += chunk.len() as u64;
 
-            // Prevent division by zero
             if total_size > 0 {
                 let progress = downloaded as f32 / total_size as f32;
                 let _ = sink.add(ModelDownloadEvent::Progress(progress));
             }
         }
 
-        // 6. Rename .part to final filename (Atomic commit)
-        std::fs::rename(&part_path, &final_path).context("Failed to rename completed file")?;
+        // 6. Rename and Finish
+        fs::rename(&part_path, &final_path).context("Failed to rename completed file")?;
 
         sink.add(ModelDownloadEvent::Completed(
             final_path.to_string_lossy().into_owned(),
